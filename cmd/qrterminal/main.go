@@ -17,6 +17,7 @@ var verboseFlag bool
 var levelFlag string
 var quietZoneFlag int
 var sixelDisableFlag bool
+var binaryFlag bool
 
 func getLevel(s string) qr.Level {
 	switch l := strings.ToLower(s); l {
@@ -36,23 +37,36 @@ func main() {
 	flag.StringVar(&levelFlag, "l", "L", "Error correction level")
 	flag.IntVar(&quietZoneFlag, "q", 2, "Size of quietzone border")
 	flag.BoolVar(&sixelDisableFlag, "s", false, "disable sixel format for output")
+	flag.BoolVar(&binaryFlag, "b", false, "treat input as binary data (preserves exact byte values)")
 
 	flag.Parse()
 	level := getLevel(levelFlag)
-	content := strings.Join(flag.Args(), " ")
 
-	if len(content) < 1 {
-		// Get input from stdin until EOF
-		stdin, err := io.ReadAll(os.Stdin)
-
-		if err != nil {
-			panic(err)
-		}
-		content = string(stdin)
-	} else if level < 0 {
+	if level < 0 {
 		fmt.Fprintf(os.Stderr, "Invalid error correction level: %s\n", levelFlag)
 		fmt.Fprintf(os.Stderr, "Valid options are [L, M, H]\n")
 		os.Exit(1)
+	}
+
+	var content string
+	var binaryData []byte
+	var err error
+
+	args := flag.Args()
+	if len(args) < 1 {
+		// Get input from stdin until EOF
+		binaryData, err = io.ReadAll(os.Stdin)
+		if err != nil {
+			panic(err)
+		}
+		if !binaryFlag {
+			content = string(binaryData)
+		}
+	} else {
+		content = strings.Join(args, " ")
+		if binaryFlag {
+			binaryData = []byte(content)
+		}
 	}
 
 	cfg := qrterminal.Config{
@@ -68,7 +82,12 @@ func main() {
 	if verboseFlag {
 		fmt.Fprintf(os.Stdout, "Level: %s \n", levelFlag)
 		fmt.Fprintf(os.Stdout, "Quietzone Border Size: %d \n", quietZoneFlag)
-		fmt.Fprintf(os.Stdout, "Encoded data: %s \n", strings.Join(flag.Args(), "\n"))
+		fmt.Fprintf(os.Stdout, "Binary mode: %t \n", binaryFlag)
+		if binaryFlag {
+			fmt.Fprintf(os.Stdout, "Encoded data: %d bytes of binary data \n", len(binaryData))
+		} else {
+			fmt.Fprintf(os.Stdout, "Encoded data: %s \n", strings.Join(flag.Args(), "\n"))
+		}
 		fmt.Println("")
 	}
 
@@ -79,5 +98,10 @@ func main() {
 	}
 
 	fmt.Fprint(os.Stdout, "\n")
-	qrterminal.GenerateWithConfig(content, cfg)
+
+	if binaryFlag {
+		qrterminal.GenerateBinaryWithConfig(binaryData, cfg)
+	} else {
+		qrterminal.GenerateWithConfig(content, cfg)
+	}
 }

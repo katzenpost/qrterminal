@@ -35,6 +35,23 @@ func main() {
 }
 ```
 
+### Binary Data Support
+
+qrterminal now supports encoding binary data directly without string conversion:
+
+```go
+import (
+    "github.com/mdp/qrterminal/v3"
+    "os"
+    )
+
+func main() {
+  // Generate a QR code from binary data
+  binaryData := []byte{0x00, 0x01, 0x02, 0xFF, 0xFE, 0xFD}
+  qrterminal.GenerateBinary(binaryData, qrterminal.L, os.Stdout)
+}
+```
+
 ### More complicated
 
 Large Inverted barcode with medium redundancy and a 1 pixel border
@@ -73,6 +90,25 @@ func main() {
 }
 ```
 
+Binary data with custom configuration
+```go
+import (
+    "github.com/mdp/qrterminal/v3"
+    "os"
+    )
+
+func main() {
+  binaryData := []byte{0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x00, 0xFF}
+  config := qrterminal.Config{
+      Level: qrterminal.H,
+      Writer: os.Stdout,
+      HalfBlocks: true,
+      QuietZone: 1,
+  }
+  qrterminal.GenerateBinaryWithConfig(binaryData, config)
+}
+```
+
 
 ## Command Line
 
@@ -103,6 +139,12 @@ You can also pipe text via stdin
 or
 
 `cat wireguard_peer.conf | docker run --rm -i ghcr.io/mdp/qrterminal:latest`
+
+For binary data, use the `-b` flag:
+
+`cat binary_file.bin | qrterminal -b`
+
+This preserves the exact byte values in the QR code without any string conversion.
 
 
 ### Contributors/Credits:

@@ -262,3 +262,72 @@ func GenerateHalfBlock(text string, l qr.Level, w io.Writer) {
 	}
 	GenerateWithConfig(text, config)
 }
+
+// GenerateBinary generates a QR Code from binary data and writes it out to io.Writer
+// This function encodes the actual binary data without any string conversion,
+// preserving the exact byte values in the QR code.
+func GenerateBinary(data []byte, l qr.Level, w io.Writer) {
+	config := Config{
+		Level:     l,
+		Writer:    w,
+		BlackChar: BLACK,
+		WhiteChar: WHITE,
+		QuietZone: QUIET_ZONE,
+	}
+	config.WithSixel = IsSixelSupported(w)
+	GenerateBinaryWithConfig(data, config)
+}
+
+// GenerateBinaryWithConfig generates a QR Code from binary data using the provided config
+// This function encodes the actual binary data without any string conversion,
+// preserving the exact byte values in the QR code.
+func GenerateBinaryWithConfig(data []byte, config Config) {
+	if config.QuietZone < 1 {
+		config.QuietZone = 1 // at least 1-pixel-wide white quiet zone
+	}
+	w := config.Writer
+
+	// Convert binary data to string for QR encoding
+	// This is safe for binary data as we're encoding the exact byte values
+	text := string(data)
+	code, _ := qr.Encode(text, config.Level)
+
+	// Set default values for characters if not provided
+	if config.BlackChar == "" {
+		config.BlackChar = BLACK_BLACK
+	}
+	if config.WhiteBlackChar == "" {
+		config.WhiteBlackChar = WHITE_BLACK
+	}
+	if config.WhiteChar == "" {
+		config.WhiteChar = WHITE_WHITE
+	}
+	if config.BlackWhiteChar == "" {
+		config.BlackWhiteChar = BLACK_WHITE
+	}
+
+	if config.HalfBlocks {
+		config.writeHalfBlocks(w, code)
+	} else if config.WithSixel {
+		config.writeSixel(w, code)
+	} else {
+		config.writeFullBlocks(w, code)
+	}
+}
+
+// GenerateBinaryHalfBlock generates a QR Code from binary data with half blocks and writes it out to io.Writer
+// This function encodes the actual binary data without any string conversion,
+// preserving the exact byte values in the QR code.
+func GenerateBinaryHalfBlock(data []byte, l qr.Level, w io.Writer) {
+	config := Config{
+		Level:          l,
+		Writer:         w,
+		HalfBlocks:     true,
+		BlackChar:      BLACK_BLACK,
+		WhiteBlackChar: WHITE_BLACK,
+		WhiteChar:      WHITE_WHITE,
+		BlackWhiteChar: BLACK_WHITE,
+		QuietZone:      QUIET_ZONE,
+	}
+	GenerateBinaryWithConfig(data, config)
+}

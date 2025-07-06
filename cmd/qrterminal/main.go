@@ -8,8 +8,8 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/katzenpost/qrterminal/v3"
 	"github.com/mattn/go-colorable"
-	"github.com/mdp/qrterminal/v3"
 	"rsc.io/qr"
 )
 

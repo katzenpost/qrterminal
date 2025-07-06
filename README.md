@@ -1,6 +1,6 @@
 # QRCode Terminal
 
-[![Build Status](https://github.com/mdp/qrterminal/actions/workflows/build.yml/badge.svg)](https://github.com/mdp/qrterminal/actions/workflows/build.yml)
+[![Build Status](https://github.com/katzenpost/qrterminal/actions/workflows/build.yml/badge.svg)](https://github.com/katzenpost/qrterminal/actions/workflows/build.yml)
 
 A golang library for generating QR codes in the terminal.
 
@@ -15,23 +15,23 @@ Smaller 'half blocks' in the terminal:
 
 ## Install
 
-For command line usage [see below](https://github.com/mdp/qrterminal#command-line), or grab the binary from the [releases page](https://github.com/mdp/qrterminal/releases)
+For command line usage [see below](https://github.com/katzenpost/qrterminal#command-line), or grab the binary from the [releases page](https://github.com/katzenpost/qrterminal/releases)
 
 As a library in an application
 
-`go get github.com/mdp/qrterminal/v3`
+`go get github.com/katzenpost/qrterminal/v3`
 
 ## Usage
 
 ```go
 import (
-    "github.com/mdp/qrterminal/v3"
+    "github.com/katzenpost/qrterminal/v3"
     "os"
     )
 
 func main() {
   // Generate a 'dense' qrcode with the 'Low' level error correction and write it to Stdout
-  qrterminal.Generate("https://github.com/mdp/qrterminal", qrterminal.L, os.Stdout)
+  qrterminal.Generate("https://github.com/katzenpost/qrterminal", qrterminal.L, os.Stdout)
 }
 ```
 
@@ -41,7 +41,7 @@ qrterminal now supports encoding binary data directly without string conversion:
 
 ```go
 import (
-    "github.com/mdp/qrterminal/v3"
+    "github.com/katzenpost/qrterminal/v3"
     "os"
     )
 
@@ -57,7 +57,7 @@ func main() {
 Large Inverted barcode with medium redundancy and a 1 pixel border
 ```go
 import (
-    "github.com/mdp/qrterminal/v3"
+    "github.com/katzenpost/qrterminal/v3"
     "os"
     )
 
@@ -69,14 +69,14 @@ func main() {
       WhiteChar: qrterminal.BLACK,
       QuietZone: 1,
   }
-  qrterminal.GenerateWithConfig("https://github.com/mdp/qrterminal", config)
+  qrterminal.GenerateWithConfig("https://github.com/katzenpost/qrterminal", config)
 }
 ```
 
 HalfBlock barcode with medium redundancy
 ```go
 import (
-    "github.com/mdp/qrterminal/v3"
+    "github.com/katzenpost/qrterminal/v3"
     "os"
     )
 
@@ -86,14 +86,14 @@ func main() {
       Level: qrterminal.M,
       Writer: os.Stdout,
   }
-  qrterminal.GenerateWithConfig("https://github.com/mdp/qrterminal", config)
+  qrterminal.GenerateWithConfig("https://github.com/katzenpost/qrterminal", config)
 }
 ```
 
 Binary data with custom configuration
 ```go
 import (
-    "github.com/mdp/qrterminal/v3"
+    "github.com/katzenpost/qrterminal/v3"
     "os"
     )
 
@@ -116,21 +116,21 @@ func main() {
 
 OSX: `brew install mdp/tap/qrterminal`
 
-Others: Download from the [releases page](https://github.com/mdp/qrterminal/releases)
+Others: Download from the [releases page](https://github.com/katzenpost/qrterminal/releases)
 
-Source: `go install github.com/mdp/qrterminal/v3/cmd/qrterminal@latest`
+Source: `go install github.com/katzenpost/qrterminal/v3/cmd/qrterminal@latest`
 
 Docker: `docker pull ghcr.io/mdp/qrterminal:latest`
 
 #### Usage
 
-Print out a basic QR code in your terminal:  
-`qrterminal https://github.com/mdp/qrterminal`
+Print out a basic QR code in your terminal:
+`qrterminal https://github.com/katzenpost/qrterminal`
 
-Using 'medium' error correction:  
-`qrterminal https://github.com/mdp/qrterminal -l M`
+Using 'medium' error correction:
+`qrterminal https://github.com/katzenpost/qrterminal -l M`
 
-Or just use Docker: `docker run --rm ghcr.io/mdp/qrterminal:latest 'https://github.com/mdp/qrterminal'`
+Or just use Docker: `docker run --rm ghcr.io/mdp/qrterminal:latest 'https://github.com/katzenpost/qrterminal'`
 
 You can also pipe text via stdin
 

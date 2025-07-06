@@ -1,4 +1,4 @@
-module github.com/mdp/qrterminal/v3
+module github.com/katzenpost/qrterminal/v3
 
 go 1.20
 
